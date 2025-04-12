@@ -12,7 +12,6 @@ const startOrderBtn = document.getElementById('start-order-btn');
 const welcomeTableNumberInput = document.getElementById('welcome-table-number');
 const cartBtn = document.getElementById('cart-btn');
 const closeBtn = document.getElementById('close-btn');
-const closeFooterBtn = document.getElementById('close-footer-btn');
 const backBtn = document.getElementById('back-btn');
 const payBtn = document.getElementById('pay-btn');
 const newOrderBtn = document.getElementById('new-order-btn');
@@ -55,7 +54,7 @@ const ADMIN_PASSWORD = "cafe123";
 
 // Fetch menu items from Sheety
 async function fetchMenuItems() {
-    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu?t=${Date.now()}`;
+    const apiUrl = `https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/menu?t=${Date.now()}`;
     try {
         console.log("Fetching menu items from:", apiUrl);
         const response = await fetch(apiUrl);
@@ -63,7 +62,7 @@ async function fetchMenuItems() {
         const data = await response.json();
         console.log("Raw Sheety response:", data);
         menuItems = Array.isArray(data.menu) ? data.menu : [];
-        console.log("Parsed menu items with categories:", menuItems.map(item => ({ name: item.name, category: item.category })));
+        console.log("Parsed menu items with categories:", menuItems.map(item => ({ name: item.name, category: item.category || 'undefined' })));
         return menuItems;
     } catch (error) {
         console.error("Error fetching menu items:", error.message);
@@ -74,7 +73,7 @@ async function fetchMenuItems() {
 
 // Fetch orders from Sheety
 async function fetchOrders() {
-    const apiUrl = "https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/orders";
+    const apiUrl = "https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/orders";
     try {
         console.log("Fetching orders...");
         const response = await fetch(apiUrl);
@@ -100,7 +99,6 @@ function setupEventListeners() {
     startOrderBtn.addEventListener('click', startOrder);
     cartBtn.addEventListener('click', showCartScreen);
     closeBtn.addEventListener('click', () => (menuScreen.classList.add('hidden'), welcomeScreen.classList.remove('hidden')));
-    closeFooterBtn.addEventListener('click', () => menuScreen.classList.add('hidden'));
     backBtn.addEventListener('click', showMenuScreen);
     payBtn.addEventListener('click', placeOrder);
     newOrderBtn.addEventListener('click', startNewOrder);
@@ -227,7 +225,7 @@ async function saveMenuItem(e) {
         alert('Please fill in all fields');
         return;
     }
-    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu${menuIdInput.value ? '/' + id : ''}`;
+    const apiUrl = `https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/menu${menuIdInput.value ? '/' + id : ''}`;
     try {
         const response = await fetch(apiUrl, {
             method: menuIdInput.value ? 'PUT' : 'POST',
@@ -272,7 +270,7 @@ function editMenuItem(e) {
 async function deleteMenuItem(e) {
     console.log("Deleting menu item...");
     const id = e.currentTarget.dataset.id;
-    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu/${id}`;
+    const apiUrl = `https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/menu/${id}`;
     try {
         const response = await fetch(apiUrl, { method: 'DELETE' });
         if (response.ok) {
@@ -296,7 +294,7 @@ async function editOrder(e) {
     const id = e.currentTarget.dataset.id;
     const newName = prompt("Enter new customer name:");
     if (!newName) return;
-    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/orders/${id}`;
+    const apiUrl = `https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/orders/${id}`;
     try {
         const response = await fetch(apiUrl, {
             method: 'PUT',
@@ -325,40 +323,51 @@ function resetMenuForm() {
 
 // Load menu items
 function loadMenuItems(category = 'all') {
-    console.log("Loading menu for:", category);
+    console.log("Loading menu for category:", category);
     menuContainer.innerHTML = '';
-    const filteredItems = category === 'all' ? menuItems : menuItems.filter(item => item.category && item.category.toLowerCase() === category.toLowerCase());
-    console.log("Filtered items:", filteredItems.map(item => ({ name: item.name, category: item.category }))); // Debug filter
-    if (!filteredItems.length) menuContainer.innerHTML = '<p>No items available in this category.</p>';
-    else filteredItems.forEach(item => {
-        const cartItem = cart.find(ci => ci.id == item.id);
-        const quantity = cartItem ? cartItem.quantity : 0;
-        const menuItem = document.createElement('div');
-        menuItem.className = 'menu-item';
-        menuItem.innerHTML = `
-            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100?text=${item.name}'">
-            <div class="menu-item-details">
-                <h3>${item.name}</h3>
-                <p>${item.description}</p>
-                <span class="price">₹${item.price ? item.price.toFixed(2) : '0.00'}</span>
-                <i class="fas fa-heart heart"></i>
-            </div>
-            <div class="quantity-control" data-id="${item.id}">
-                ${quantity > 0 ? `
-                    <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
-                    <span class="quantity">${quantity}</span>
-                    <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
-                ` : `
-                    <button class="add-btn" data-id="${item.id}"><i class="fas fa-plus"></i></button>
-                `}
-            </div>
-        `;
-        menuContainer.appendChild(menuItem);
-    });
+    const filteredItems = category === 'all' ? menuItems : menuItems.filter(item => 
+        item.category && item.category.toLowerCase() === category.toLowerCase());
+    console.log("Filtered items for category", category, ":", filteredItems.map(item => ({ 
+        name: item.name, category: item.category || 'undefined' 
+    })));
+    if (!filteredItems.length) {
+        menuContainer.innerHTML = `<p>No items available in ${category} category.</p>`;
+    } else {
+        filteredItems.forEach(item => {
+            const cartItem = cart.find(ci => ci.id == item.id);
+            const quantity = cartItem ? cartItem.quantity : 0;
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
+            menuItem.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100?text=${item.name}'">
+                <div class="menu-item-details">
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    <span class="price">₹${item.price ? item.price.toFixed(2) : '0.00'}</span>
+                    <i class="fas fa-heart heart"></i>
+                </div>
+                <div class="quantity-control" data-id="${item.id}">
+                    ${quantity > 0 ? `
+                        <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="quantity">${quantity}</span>
+                        <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+                    ` : `
+                        <button class="add-btn" data-id="${item.id}"><i class="fas fa-plus"></i></button>
+                    `}
+                </div>
+            `;
+            menuContainer.appendChild(menuItem);
+        });
+    }
+    attachCartEventListeners(); // Reattach event listeners after loading
+    updateCartTotal();
+}
+
+// Attach cart event listeners
+function attachCartEventListeners() {
     document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', addToCart));
     document.querySelectorAll('.increase').forEach(btn => btn.addEventListener('click', increaseQuantity));
     document.querySelectorAll('.decrease').forEach(btn => btn.addEventListener('click', decreaseQuantity));
-    updateCartTotal();
 }
 
 // Start order
@@ -384,7 +393,10 @@ function startOrder() {
 function addToCart(e) {
     const itemId = e.currentTarget.dataset.id;
     const item = menuItems.find(i => i.id == itemId);
-    if (!item) return;
+    if (!item) {
+        console.error("Item not found in menuItems:", itemId);
+        return;
+    }
     console.log("Adding:", item.name);
     const existing = cart.find(ci => ci.id == itemId);
     if (existing) existing.quantity += 1;
@@ -410,27 +422,31 @@ function updateCartTotal() {
 
 // Show cart screen
 function showCartScreen() {
-    console.log("Showing cart...");
+    console.log("Showing cart...", "Cart contents:", cart);
     cartItemsContainer.innerHTML = '';
-    cart.forEach(item => {
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/90?text=${item.name}'">
-            <div>
-                <h3>${item.name}</h3>
-                <p>₹${item.price} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</p>
-                <div class="quantity-control" data-id="${item.id}">
-                    <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
-                    <span class="quantity">${item.quantity}</span>
-                    <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p>No items in cart.</p>';
+    } else {
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/90?text=${item.name}'">
+                <div>
+                    <h3>${item.name || 'Unnamed Item'}</h3> <!-- Ensure name is displayed -->
+                    <p>${item.description || 'No description'}</p>
+                    <p>₹${item.price || 0} x ${item.quantity} = ₹${(item.price * item.quantity || 0).toFixed(2)}</p>
+                    <div class="quantity-control" data-id="${item.id}">
+                        <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+                    </div>
                 </div>
-            </div>
-        `;
-        cartItemsContainer.appendChild(cartItem);
-    });
-    document.querySelectorAll('.increase').forEach(btn => btn.addEventListener('click', increaseQuantity));
-    document.querySelectorAll('.decrease').forEach(btn => btn.addEventListener('click', decreaseQuantity));
+            `;
+            cartItemsContainer.appendChild(cartItem);
+        });
+        attachCartEventListeners(); // Reattach event listeners in cart screen
+    }
     updateTotals();
     menuScreen.classList.add('hidden');
     cartScreen.classList.remove('hidden');
@@ -445,6 +461,7 @@ function increaseQuantity(e) {
         updateCartCount();
         updateCartTotal();
         loadMenuItems(document.querySelector('.tab-btn.active').dataset.category);
+        showCartScreen(); // Refresh cart screen
     }
 }
 
@@ -458,12 +475,13 @@ function decreaseQuantity(e) {
         updateCartCount();
         updateCartTotal();
         loadMenuItems(document.querySelector('.tab-btn.active').dataset.category);
+        showCartScreen(); // Refresh cart screen
     }
 }
 
 // Update totals
 function updateTotals() {
-    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity || 0), 0);
     const tax = subtotal * 0.05;
     const total = subtotal + tax;
     subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
@@ -497,13 +515,14 @@ function placeOrder() {
         tableNumber,
         customerName,
         phoneNumber,
-        items: cart.map(item => `${item.name} (x${item.quantity})`).join(', '),
-        subtotal: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-        tax: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * 0.05,
-        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * 1.05,
+        items: cart.map(item => `${item.name || 'Unnamed Item'} (x${item.quantity})`).join(', '),
+        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity || 0), 0),
+        tax: cart.reduce((sum, item) => sum + (item.price * item.quantity || 0), 0) * 0.05,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity || 0), 0) * 1.05,
         paymentMethod: 'online',
         timestamp: new Date().toISOString()
     };
+    console.log("Order details:", order);
     console.log(`Payment for ₹${order.total.toFixed(2)} to dbdake1@okhdfcbank`);
     alert(`Please complete payment of ₹${order.total.toFixed(2)} via UPI to dbdake1@okhdfcbank`);
     sendOrderToSheety(order);
@@ -518,7 +537,7 @@ function placeOrder() {
 
 // Send order to Sheety
 async function sendOrderToSheety(order) {
-    const apiUrl = "https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/orders";
+    const apiUrl = "https://api.sheety.co/f1b0b64300935238779a4511c212aa8e/kathaaOrderbook/orders";
     try {
         const response = await fetch(apiUrl, {
             method: "POST",

@@ -13,14 +13,14 @@ body {
 
 :root {
     --header-orange: #e26a05; /* Header and cart button */
-    --cream: #fff4e2; /* Card and category background */  
+    --cream: #fff4e2; /* Card and category background */
     --blue: #8384fe; /* Main background */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .screen {
     min-height: 100vh;
-    padding: 20px;
+    /* Removed padding: 20px for edge-to-edge */
     overflow-x: hidden;
 }
 
@@ -75,9 +75,9 @@ body {
 /* Header */
 header {
     background: var(--header-orange);
-    padding: 15px 20px;
+    padding: 15px;
     text-align: center;
-    border-radius: 0px 0px 0 0;
+    border-radius: 10px 10px 0 0;
     box-shadow: var(--shadow);
 }
 
@@ -85,8 +85,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none; /* Remove max-width for edge-to-edge */
 }
 
 header h1 {
@@ -108,18 +108,17 @@ header p {
 
 /* Category Tabs */
 .category-tabs {
-    position: sticky; /* Fix at top on scroll */
+    position: sticky;
     top: 0;
     z-index: 1000;
     display: flex;
-    gap: 0px;
-    margin: 0px 0;
-    padding: 30px; /* Increased padding for wider feel */
-    background: var(--cream);
-    /* Removed border-radius for straight edges */
-    width: 100%; /* Full width */
     justify-content: center;
+    gap: 10px;
+    padding: 10px 0; /* Reduced padding for tighter fit */
+    background: var(--cream);
+    width: 100%; /* Full width */
     box-shadow: var(--shadow);
+    border-bottom: 2px solid var(--header-orange); /* Match image style */
 }
 
 .tab-btn {
@@ -127,11 +126,13 @@ header p {
     color: var(--cream);
     border: none;
     padding: 10px 20px;
-    border-radius: 50px; /* Keep button corners rounded */
+    border-radius: 20px; /* Rounded corners like image */
     cursor: pointer;
     transition: all 0.3s;
     font-size: 1rem;
     white-space: nowrap;
+    min-width: 100px; /* Ensure consistent width */
+    text-align: center;
 }
 
 .tab-btn.active {
@@ -147,8 +148,9 @@ header p {
 .menu-container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Uniform spacing */
+    gap: 20px;
     padding: 20px 0;
+    width: 100%;
 }
 
 .menu-item {
@@ -156,11 +158,14 @@ header p {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    border: 0px solid var(--header-orange);
+    border: 3px solid var(--header-orange);
     display: flex;
     align-items: center;
     padding: 10px;
     position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; /* Center items */
 }
 
 .menu-item img {
@@ -173,7 +178,7 @@ header p {
 
 .menu-item-details {
     flex-grow: 1;
-    text-align: left; /* Align description left */
+    text-align: left;
 }
 
 .menu-item-details h3 {
@@ -264,7 +269,7 @@ header p {
     bottom: 0;
     width: 100%;
     background: var(--header-orange);
-    padding: 10px 20px;
+    padding: 10px 0;
     box-shadow: var(--shadow);
     border-radius: 10px 10px 0 0;
 }
@@ -273,8 +278,10 @@ header p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     max-width: 600px;
     margin: 0 auto;
+    padding: 0 20px; /* Internal padding for content */
     color: var(--cream);
 }
 
@@ -292,7 +299,7 @@ header p {
     color: var(--header-orange);
     border: none;
     padding: 8px 15px;
-    border-radius: 50px;
+    border-radius: 20px; /* Match image style */
     display: flex;
     align-items: center;
     gap: 5px;
@@ -305,16 +312,9 @@ header p {
     background: #ffe6cc;
 }
 
-.close-btn {
-    background: transparent;
-    color: var(--cream);
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
 /* Cart Screen */
 .cart-items {
+    width: 100%;
     max-width: 700px;
     margin: 20px auto;
 }
@@ -339,6 +339,7 @@ header p {
 }
 
 .order-summary {
+    width: 100%;
     max-width: 700px;
     margin: 20px auto;
     background: var(--cream);
@@ -357,6 +358,7 @@ header p {
 }
 
 .customer-details {
+    width: 100%;
     max-width: 700px;
     margin: 20px auto;
 }
