@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Kathaa - Digital Menu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <div class="welcome-card">
+            <i class="fas fa-coffee"></i>
+            <h1>Welcome to Cafe Kathaa</h1>
+            <p>Please enter your table number to start your order</p>
+            <input type="number" id="welcome-table-number" placeholder="Table Number" min="1" required>
+            <button id="start-order-btn" class="btn"><i class="fas fa-arrow-right"></i> Start Order</button>
+        </div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen hidden">
+        <header>
+            <h1><i class="fas fa-utensils"></i> Cafe Kathaa - Table <span id="current-table">1</span></h1>
+            <button id="cart-btn" class="btn cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </button>
+        </header>
+        <nav class="category-tabs">
+            <button class="tab-btn active" data-category="all"><i class="fas fa-th"></i> All</button>
+            <button class="tab-btn" data-category="beverages"><i class="fas fa-coffee"></i> Beverages</button>
+            <button class="tab-btn" data-category="appetizers"><i class="fas fa-drumstick-bite"></i> Appetizers</button>
+            <button class="tab-btn" data-category="main"><i class="fas fa-hamburger"></i> Main Course</button>
+            <button class="tab-btn" data-category="desserts"><i class="fas fa-ice-cream"></i> Desserts</button>
+        </nav>
+        <main class="menu-container"></main>
+    </div>
+
+    <!-- Cart Screen -->
+    <div id="cart-screen" class="screen hidden">
+        <header>
+            <button id="back-btn" class="btn"><i class="fas fa-arrow-left"></i> Back</button>
+            <h1><i class="fas fa-shopping-bag"></i> Your Order</h1>
+        </header>
+        <div class="cart-items"></div>
+        <div class="order-summary">
+            <p>Subtotal: <span id="subtotal">₹0.00</span></p>
+            <p>Tax (5%): <span id="tax">₹0.00</span></p>
+            <p>Total: <span id="total">₹0.00</span></p>
+        </div>
+        <div class="customer-details">
+            <input type="text" id="customer-name" placeholder="Your Name" required>
+            <input type="tel" id="phone-number" placeholder="Phone Number (e.g., 9876543210)" pattern="[0-9]{10}" required>
+            <input type="number" id="table-number" placeholder="Table Number" min="1" required disabled>
+        </div>
+        <button id="pay-btn" class="btn"><i class="fas fa-credit-card"></i> Pay Online</button>
+    </div>
+
+    <!-- Confirmation Screen -->
+    <div id="confirmation-screen" class="screen hidden">
+        <div class="confirmation-card">
+            <i class="fas fa-check-circle checkmark"></i>
+            <h2>Order Confirmed!</h2>
+            <p>Order Number: <span id="order-number"></span></p>
+            <p>Total: <span id="confirmation-total">₹0.00</span></p>
+            <button id="new-order-btn" class="btn"><i class="fas fa-redo"></i> New Order</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
