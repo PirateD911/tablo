@@ -30,20 +30,20 @@
                 <button id="close-btn" class="btn close-btn"><i class="fas fa-times"></i></button>
             </div>
             <p>Our every flavor tells a story.</p>
-            <span id="current-table" style="color: #fff4e2; font-size: 1rem;"></span>
         </header>
         <nav class="category-tabs">
             <button class="tab-btn active" data-category="all">All</button>
-            <button class="tab-btn" data-category="beverages">Beverage</button>
+            <button class="tab-btn" data-category="beverages">Beverages</button>
             <button class="tab-btn" data-category="main">Main course</button>
-            <button class="tab-btn" data-category="appetizers">Appetizer</button>
-            <button class="tab-btn" data-category="desserts">Dessert</button>
+            <button class="tab-btn" data-category="appetizers">Appetizers</button>
+            <button class="tab-btn" data-category="desserts">Desserts</button>
         </nav>
         <main class="menu-container"></main>
         <footer class="menu-footer">
             <div class="footer-content">
                 <span>Good food, Good mood</span>
                 <i class="fas fa-flower"></i>
+                <i class="fas fa-coffee"></i>
                 <button id="cart-btn" class="btn cart-btn">
                     My cart: <span id="cart-total">₹0.00</span>, <span id="cart-count">0</span> item
                 </button>
@@ -55,7 +55,7 @@
     <!-- Cart Screen -->
     <div id="cart-screen" class="screen hidden">
         <header>
-            <button id="back-btn" class="btn"><i class="fas fa-arrow-left"></i> Back</button>
+            <button id="back-btn" class="btn"><i class="fas fa-arrow-left"></i></button>
             <h1>CAFE KATHA</h1>
         </header>
         <div class="cart-items"></div>
@@ -119,10 +119,10 @@
                 <input type="number" id="menu-price" placeholder="Price (₹)" step="0.01" required>
                 <select id="menu-category" required>
                     <option value="">Select Category</option>
-                    <option value="beverages">Beverage</option>
-                    <option value="appetizers">Appetizer</option>
+                    <option value="beverage">Beverage</option>
+                    <option value="appetizer">Appetizer</option>
                     <option value="main">Main course</option>
-                    <option value="desserts">Dessert</option>
+                    <option value="dessert">Dessert</option>
                 </select>
                 <input type="text" id="menu-image" placeholder="Image URL" required>
                 <button type="submit" id="save-menu-btn" class="btn"><i class="fas fa-save"></i> Save Item</button>

@@ -10,7 +10,6 @@ const confirmationScreen = document.getElementById('confirmation-screen');
 const adminScreen = document.getElementById('admin-screen');
 const startOrderBtn = document.getElementById('start-order-btn');
 const welcomeTableNumberInput = document.getElementById('welcome-table-number');
-const currentTableDisplay = document.getElementById('current-table');
 const cartBtn = document.getElementById('cart-btn');
 const closeBtn = document.getElementById('close-btn');
 const closeFooterBtn = document.getElementById('close-footer-btn');
@@ -64,7 +63,7 @@ async function fetchMenuItems() {
         const data = await response.json();
         console.log("Raw Sheety response:", data);
         menuItems = Array.isArray(data.menu) ? data.menu : [];
-        console.log("Parsed menu items:", menuItems);
+        console.log("Parsed menu items with categories:", menuItems.map(item => ({ name: item.name, category: item.category })));
         return menuItems;
     } catch (error) {
         console.error("Error fetching menu items:", error.message);
@@ -93,9 +92,7 @@ async function fetchOrders() {
 async function init() {
     await fetchMenuItems();
     setupEventListeners();
-    if (!currentTableDisplay) {
-        console.warn("currentTableDisplay not found, ensure it's in index.html header");
-    }
+    loadMenuItems(); // Load items on init
 }
 
 // Setup event listeners
@@ -242,6 +239,7 @@ async function saveMenuItem(e) {
             resetMenuForm();
             await loadAdminMenu();
             await fetchMenuItems();
+            loadMenuItems(); // Reload menu for customer view
         } else {
             console.error("Error saving:", response.status, await response.text());
             alert("Failed to save menu item.");
@@ -281,6 +279,7 @@ async function deleteMenuItem(e) {
             console.log("Item deleted:", id);
             await loadAdminMenu();
             await fetchMenuItems();
+            loadMenuItems(); // Reload menu for customer view
         } else {
             console.error("Error deleting:", response.status, await response.text());
             alert("Failed to delete menu item.");
@@ -328,8 +327,9 @@ function resetMenuForm() {
 function loadMenuItems(category = 'all') {
     console.log("Loading menu for:", category);
     menuContainer.innerHTML = '';
-    const filteredItems = category === 'all' ? menuItems : menuItems.filter(item => item.category === category);
-    if (!filteredItems.length) menuContainer.innerHTML = '<p>No items available.</p>';
+    const filteredItems = category === 'all' ? menuItems : menuItems.filter(item => item.category && item.category.toLowerCase() === category.toLowerCase());
+    console.log("Filtered items:", filteredItems.map(item => ({ name: item.name, category: item.category }))); // Debug filter
+    if (!filteredItems.length) menuContainer.innerHTML = '<p>No items available in this category.</p>';
     else filteredItems.forEach(item => {
         const cartItem = cart.find(ci => ci.id == item.id);
         const quantity = cartItem ? cartItem.quantity : 0;
@@ -373,7 +373,6 @@ function startOrder() {
     }
     currentTable = tableNumber;
     console.log("Setting currentTable to:", currentTable);
-    if (currentTableDisplay) currentTableDisplay.textContent = tableNumber; // Only set if exists
     tableNumberInput.value = tableNumber;
     console.log("Transitioning screens...");
     welcomeScreen.classList.add('hidden');
@@ -399,6 +398,8 @@ function addToCart(e) {
 function updateCartCount() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
+    if (totalItems === 1) cartCount.textContent += ' item';
+    else cartCount.textContent += ' items';
 }
 
 // Update cart total
