@@ -20,27 +20,14 @@ const menuImageInput = document.getElementById('menu-image');
 const saveMenuBtn = document.getElementById('save-menu-btn');
 
 // Hardcoded credentials (for prototype)
-const ADMIN_USERNAME = "Dipak";
-const ADMIN_PASSWORD = "Cafe@123";
-
-// Local menu storage (for prototype; in production, use a backend)
-let menuItems = [
-    { id: 2, name: "Cappuccino", description: "Frothy espresso delight", price: 120, category: "beverages", image: "https://img.freepik.com/free-photo/cup-coffee-with-heart-drawn-foam_1286-70.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 1, name: "Masala Chai", description: "Spiced Indian tea", price: 50, category: "beverages", image: "https://img.freepik.com/free-psd/tasty-indian-masala-chai-with-spices-isolated-transparent-background_191095-14265.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 3, name: "Spring Rolls", description: "Crispy veggie rolls", price: 100, category: "appetizers", image: "https://img.freepik.com/free-photo/fresh-spring-roll-appetizer-with-vegetables-pork-plate-generated-by-ai_188544-55526.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 4, name: "Butter Chicken", description: "Creamy curry with naan", price: 250, category: "main", image: "https://img.freepik.com/free-photo/curry-with-chicken-onions-indian-food-asian-cuisine_2829-6270.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 5, name: "Gulab Jamun", description: "Sweet syrupy balls", price: 80, category: "desserts", image: "https://img.freepik.com/free-psd/sweet-gulab-jamun-white-bowl-delicious-indian-dessert_84443-34333.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 6, name: "Cold Coffee", description: "Chilled coffee bliss", price: 90, category: "beverages", image: "https://img.freepik.com/free-photo/iced-coffee-latte_23-2151961339.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 7, name: "Paneer Tikka", description: "Spiced grilled paneer", price: 150, category: "appetizers", image: "https://img.freepik.com/free-photo/chicken-skewers-with-slices-sweet-peppers-dill_2829-18813.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 8, name: "Pasta Alfredo", description: "Creamy pasta perfection", price: 200, category: "main", image: "https://img.freepik.com/free-photo/freshness-healthy-eating-homemade-vegetarian-pasta-generated-by-artificial-intelligence_188544-128803.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 9, name: "Chocolate Lava Cake", description: "Molten chocolate treat", price: 120, category: "desserts", image: "https://img.freepik.com/free-photo/delicious-volcano-chocolate-cake_23-2151940311.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" },
-    { id: 10, name: "Mango Lassi", description: "Sweet mango yogurt drink", price: 70, category: "beverages", image: "https://img.freepik.com/free-photo/delicious-mango-still-life_23-2151542230.jpg?ga=GA1.1.1900931658.1694967687&semt=ais_hybrid&w=740" }
-];
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "cafe123";
 
 // Initialize the app
 function init() {
     setupEventListeners();
-    loadMenuItems();
+    // Fetch menu items on load
+    fetchMenuItems().then(loadMenuItems);
 }
 
 // Setup event listeners
@@ -66,7 +53,7 @@ function handleLogin() {
         loginScreen.classList.add('hidden');
         dashboard.classList.remove('hidden');
         fetchOrders();
-        loadMenuItems();
+        fetchMenuItems().then(loadMenuItems);
     } else {
         alert('Invalid username or password');
     }
@@ -85,6 +72,9 @@ function showSection(section) {
     ordersSection.classList.remove('active');
     menuSection.classList.remove('active');
     document.getElementById(`${section}-section`).classList.add('active');
+    if (section === 'menu') {
+        fetchMenuItems().then(loadMenuItems); // Refresh menu tab
+    }
 }
 
 // Fetch orders from Sheety API
@@ -122,9 +112,30 @@ function displayOrders(orders) {
     });
 }
 
+// Fetch menu items from Sheety
+async function fetchMenuItems() {
+    const apiUrl = "https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu";
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        console.log("Fetched menu items:", data.menu); // Debug
+        return data.menu || [];
+    } catch (error) {
+        console.error("Error fetching menu items:", error);
+        return [];
+    }
+}
+
 // Load menu items into table
-function loadMenuItems() {
+async function loadMenuItems() {
+    const menuItems = await fetchMenuItems();
     menuTable.innerHTML = '';
+    if (menuItems.length === 0) {
+        menuTable.innerHTML = '<tr><td colspan="5">No menu items available.</td></tr>';
+        return;
+    }
+
     menuItems.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -145,7 +156,7 @@ function loadMenuItems() {
 }
 
 // Save or update menu item
-function saveMenuItem(e) {
+async function saveMenuItem(e) {
     e.preventDefault();
     const id = menuIdInput.value ? parseInt(menuIdInput.value) : Date.now();
     const newItem = {
@@ -162,35 +173,61 @@ function saveMenuItem(e) {
         return;
     }
 
-    const existingIndex = menuItems.findIndex(item => item.id === id);
-    if (existingIndex >= 0) {
-        menuItems[existingIndex] = newItem;
-    } else {
-        menuItems.push(newItem);
-    }
+    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu${menuIdInput.value ? '/' + id : ''}`;
+    const method = menuIdInput.value ? 'PUT' : 'POST';
+    try {
+        const response = await fetch(apiUrl, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ menu: newItem })
+        });
 
-    resetMenuForm();
-    loadMenuItems();
+        if (response.ok) {
+            console.log("Menu item saved:", await response.json());
+            resetMenuForm();
+            fetchMenuItems().then(loadMenuItems);
+        } else {
+            console.error("Error saving menu item:", response.status);
+            alert("Failed to save menu item.");
+        }
+    } catch (error) {
+        console.error("Error saving menu item:", error);
+        alert("Error saving menu item.");
+    }
 }
 
 // Edit menu item
 function editMenuItem(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    const item = menuItems.find(i => i.id === id);
-    menuIdInput.value = item.id;
-    menuNameInput.value = item.name;
-    menuDescriptionInput.value = item.description;
-    menuPriceInput.value = item.price;
-    menuCategoryInput.value = item.category;
-    menuImageInput.value = item.image;
+    fetchMenuItems().then(menuItems => {
+        const item = menuItems.find(i => i.id === id);
+        if (!item) return;
+        menuIdInput.value = item.id;
+        menuNameInput.value = item.name;
+        menuDescriptionInput.value = item.description;
+        menuPriceInput.value = item.price;
+        menuCategoryInput.value = item.category;
+        menuImageInput.value = item.image;
+    });
 }
 
 // Delete menu item
-function deleteMenuItem(e) {
+async function deleteMenuItem(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    menuItems = menuItems.filter(item => item.id !== id);
-    resetMenuForm();
-    loadMenuItems();
+    const apiUrl = `https://api.sheety.co/1de03d28dfe3764aae23268d7dccc67d/restaurantOrders/menu/${id}`;
+    try {
+        const response = await fetch(apiUrl, { method: 'DELETE' });
+        if (response.ok) {
+            console.log("Menu item deleted:", id);
+            fetchMenuItems().then(loadMenuItems);
+        } else {
+            console.error("Error deleting menu item:", response.status);
+            alert("Failed to delete menu item.");
+        }
+    } catch (error) {
+        console.error("Error deleting menu item:", error);
+        alert("Error deleting menu item.");
+    }
 }
 
 // Reset menu form

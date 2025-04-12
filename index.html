@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cafe Kathaa - Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -11,44 +12,56 @@
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen">
         <div class="welcome-card">
-            <i class="fas fa-coffee"></i>
-            <h1>Welcome to Cafe Kathaa</h1>
-            <p>Please enter your table number to start your order</p>
+            <i class="fas fa-utensils"></i>
+            <h1>CAFE KATHA</h1>
+            <p>Our every flavor tells a story.</p>
             <input type="number" id="welcome-table-number" placeholder="Table Number" min="1" required>
             <button id="start-order-btn" class="btn"><i class="fas fa-arrow-right"></i> Start Order</button>
+            <button id="admin-login-btn" class="btn admin-btn"><i class="fas fa-user-shield"></i> Admin Login</button>
         </div>
     </div>
 
     <!-- Menu Screen -->
     <div id="menu-screen" class="screen hidden">
         <header>
-            <h1><i class="fas fa-utensils"></i> Cafe Kathaa - Table <span id="current-table">1</span></h1>
-            <button id="cart-btn" class="btn cart-btn">
-                <i class="fas fa-shopping-cart"></i>
-                <span id="cart-count">0</span>
-            </button>
+            <div class="header-content">
+                <i class="fas fa-utensils"></i>
+                <h1>CAFE KATHA</h1>
+                <button id="close-btn" class="btn close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <p>Our every flavor tells a story.</p>
         </header>
         <nav class="category-tabs">
-            <button class="tab-btn active" data-category="all"><i class="fas fa-th"></i> All</button>
-            <button class="tab-btn" data-category="beverages"><i class="fas fa-coffee"></i> Beverages</button>
-            <button class="tab-btn" data-category="appetizers"><i class="fas fa-drumstick-bite"></i> Appetizers</button>
-            <button class="tab-btn" data-category="main"><i class="fas fa-hamburger"></i> Main Course</button>
-            <button class="tab-btn" data-category="desserts"><i class="fas fa-ice-cream"></i> Desserts</button>
+            <button class="tab-btn active" data-category="all">All</button>
+            <button class="tab-btn" data-category="beverages">Beverage</button>
+            <button class="tab-btn" data-category="main">Main course</button>
+            <button class="tab-btn" data-category="appetizers">Appetizer</button>
+            <i class="fas fa-angle-right"></i>
         </nav>
         <main class="menu-container"></main>
+        <footer class="menu-footer">
+            <div class="footer-content">
+                <span>Good food, Good mood</span>
+                <i class="fas fa-flower"></i>
+                <button id="cart-btn" class="btn cart-btn">
+                    My cart: <span id="cart-total">$0.00</span>, <span id="cart-count">0</span> item
+                </button>
+                <button id="close-footer-btn" class="btn close-btn"><i class="fas fa-times"></i></button>
+            </div>
+        </footer>
     </div>
 
     <!-- Cart Screen -->
     <div id="cart-screen" class="screen hidden">
         <header>
             <button id="back-btn" class="btn"><i class="fas fa-arrow-left"></i> Back</button>
-            <h1><i class="fas fa-shopping-bag"></i> Your Order</h1>
+            <h1>CAFE KATHA</h1>
         </header>
         <div class="cart-items"></div>
         <div class="order-summary">
-            <p>Subtotal: <span id="subtotal">₹0.00</span></p>
-            <p>Tax (5%): <span id="tax">₹0.00</span></p>
-            <p>Total: <span id="total">₹0.00</span></p>
+            <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Tax (5%): <span id="tax">$0.00</span></p>
+            <p>Total: <span id="total">$0.00</span></p>
         </div>
         <div class="customer-details">
             <input type="text" id="customer-name" placeholder="Your Name" required>
@@ -64,8 +77,67 @@
             <i class="fas fa-check-circle checkmark"></i>
             <h2>Order Confirmed!</h2>
             <p>Order Number: <span id="order-number"></span></p>
-            <p>Total: <span id="confirmation-total">₹0.00</span></p>
+            <p>Total: <span id="confirmation-total">$0.00</span></p>
             <button id="new-order-btn" class="btn"><i class="fas fa-redo"></i> New Order</button>
+        </div>
+    </div>
+
+    <!-- Admin Screen -->
+    <div id="admin-screen" class="screen hidden">
+        <header>
+            <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+            <button id="admin-logout-btn" class="btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
+        <nav>
+            <button class="nav-btn active" data-section="orders"><i class="fas fa-clipboard-list"></i> Orders</button>
+            <button class="nav-btn" data-section="menu"><i class="fas fa-utensils"></i> Menu</button>
+        </nav>
+        <div id="admin-orders-section" class="section active">
+            <h2>Orders</h2>
+            <table id="orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Table</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="admin-menu-section" class="section hidden">
+            <h2>Menu Management</h2>
+            <form class="menu-form">
+                <input type="hidden" id="menu-id">
+                <input type="text" id="menu-name" placeholder="Item Name" required>
+                <input type="text" id="menu-description" placeholder="Description" required>
+                <input type="number" id="menu-price" placeholder="Price ($)" step="0.01" required>
+                <select id="menu-category" required>
+                    <option value="">Select Category</option>
+                    <option value="beverages">Beverage</option>
+                    <option value="appetizers">Appetizer</option>
+                    <option value="main">Main course</option>
+                    <option value="desserts">Dessert</option>
+                </select>
+                <input type="text" id="menu-image" placeholder="Image URL" required>
+                <button type="submit" id="save-menu-btn" class="btn"><i class="fas fa-save"></i> Save Item</button>
+            </form>
+            <table id="menu-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
