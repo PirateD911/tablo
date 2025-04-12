@@ -6,17 +6,15 @@
 }
 
 body {
-    background: #a45ee6; /* Purple background */
-    color: #333;
+    background: #8384fe; /* Blue background */
+    color: #fff4e2; /* Cream text on colored backgrounds */
     line-height: 1.6;
 }
 
 :root {
-    --primary: #ff6200; /* Orange */
-    --secondary: #fff3e6; /* Beige */
-    --accent: #a45ee6; /* Purple */
-    --white: #ffffff;
-    --dark: #2c2c54;
+    --header-orange: #e26a05; /* Header and cart button */
+    --cream: #fff4e2; /* Card and category background */
+    --blue: #8384fe; /* Main background */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -34,23 +32,23 @@ body {
 .welcome-card {
     max-width: 450px;
     margin: 20vh auto;
-    background: var(--white);
+    background: var(--cream);
     padding: 30px;
     text-align: center;
     border-radius: 20px;
     box-shadow: var(--shadow);
-    border: 3px solid var(--primary);
+    border: 3px solid var(--header-orange);
 }
 
 .welcome-card h1 {
-    color: var(--primary);
+    color: var(--header-orange);
     font-size: 2.5rem;
     margin-bottom: 10px;
 }
 
 .welcome-card i {
     font-size: 2.5rem;
-    color: var(--primary);
+    color: var(--header-orange);
     margin-bottom: 15px;
 }
 
@@ -63,20 +61,20 @@ body {
     width: 100%;
     padding: 12px;
     margin: 15px 0;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--header-orange);
     border-radius: 10px;
     font-size: 1.1rem;
-    background: var(--secondary);
+    background: var(--cream);
 }
 
 .admin-btn {
-    background: var(--primary);
+    background: var(--header-orange);
     margin-top: 10px;
 }
 
 /* Header */
 header {
-    background: var(--primary);
+    background: var(--header-orange);
     padding: 15px 20px;
     text-align: center;
     border-radius: 10px 10px 0 0;
@@ -93,19 +91,24 @@ header {
 
 header h1 {
     font-size: 2rem;
-    color: var(--white);
+    color: var(--cream);
     margin: 0;
 }
 
 header i {
-    color: var(--white);
+    color: var(--cream);
     font-size: 1.5rem;
 }
 
 header p {
-    color: var(--white);
+    color: var(--cream);
     font-size: 0.9rem;
     margin: 5px 0 15px;
+}
+
+#current-table {
+    color: var(--cream);
+    font-size: 1rem;
 }
 
 /* Category Tabs */
@@ -115,14 +118,14 @@ header p {
     margin: 20px 0;
     overflow-x: auto;
     padding: 10px;
-    background: var(--secondary);
+    background: var(--cream);
     border-radius: 10px;
     justify-content: center;
 }
 
 .tab-btn {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--header-orange);
+    color: var(--cream);
     border: none;
     padding: 10px 20px;
     border-radius: 50px;
@@ -133,18 +136,12 @@ header p {
 }
 
 .tab-btn.active {
-    background: var(--dark);
+    background: #2c2c54; /* Darker shade for active */
 }
 
 .tab-btn:hover {
     transform: scale(1.05);
-    background: var(--dark);
-}
-
-.category-tabs i {
-    color: var(--primary);
-    font-size: 1.5rem;
-    align-self: center;
+    background: #2c2c54;
 }
 
 /* Menu Container */
@@ -156,11 +153,11 @@ header p {
 }
 
 .menu-item {
-    background: var(--white);
+    background: var(--cream);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    border: 3px solid var(--primary);
+    border: 3px solid var(--header-orange);
     display: flex;
     align-items: center;
     padding: 10px;
@@ -181,7 +178,7 @@ header p {
 
 .menu-item-details h3 {
     font-size: 1.2rem;
-    color: var(--dark);
+    color: #2c2c54;
     margin-bottom: 5px;
 }
 
@@ -193,12 +190,12 @@ header p {
 
 .menu-item .price {
     font-size: 1.1rem;
-    color: var(--primary);
+    color: var(--header-orange);
     font-weight: 600;
 }
 
 .menu-item .heart {
-    color: var(--primary);
+    color: var(--header-orange); /* Corrected to orange, not blue */
     font-size: 1.2rem;
     margin-left: 10px;
 }
@@ -211,8 +208,8 @@ header p {
 }
 
 .quantity-btn {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--header-orange);
+    color: var(--cream);
     border: none;
     width: 30px;
     height: 30px;
@@ -227,19 +224,19 @@ header p {
 
 .quantity-btn:hover {
     transform: scale(1.1);
-    background: var(--dark);
+    background: #2c2c54;
 }
 
 .quantity {
     font-size: 1.1rem;
-    color: var(--dark);
+    color: #2c2c54;
     min-width: 20px;
     text-align: center;
 }
 
 .menu-item .add-btn {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--header-orange);
+    color: var(--cream);
     border: none;
     width: 40px;
     height: 40px;
@@ -254,7 +251,7 @@ header p {
 
 .menu-item .add-btn:hover {
     transform: scale(1.1);
-    background: var(--dark);
+    background: #2c2c54;
 }
 
 .menu-item .add-btn i {
@@ -266,7 +263,7 @@ header p {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: var(--primary);
+    background: var(--header-orange);
     padding: 10px 20px;
     box-shadow: var(--shadow);
     border-radius: 10px 10px 0 0;
@@ -278,7 +275,7 @@ header p {
     align-items: center;
     max-width: 600px;
     margin: 0 auto;
-    color: var(--white);
+    color: var(--cream);
 }
 
 .footer-content span {
@@ -290,8 +287,8 @@ header p {
 }
 
 .cart-btn {
-    background: var(--white);
-    color: var(--primary);
+    background: var(--cream);
+    color: var(--header-orange);
     border: none;
     padding: 8px 15px;
     border-radius: 50px;
@@ -304,12 +301,12 @@ header p {
 
 .cart-btn:hover {
     transform: scale(1.05);
-    background: var(--secondary);
+    background: #ffe6cc; /* Lighter cream for hover */
 }
 
 .close-btn {
     background: transparent;
-    color: var(--white);
+    color: var(--cream);
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
@@ -325,12 +322,12 @@ header p {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: var(--white);
+    background: var(--cream);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 15px;
     box-shadow: var(--shadow);
-    border-right: 4px solid var(--primary);
+    border-right: 4px solid var(--header-orange);
 }
 
 .cart-item img {
@@ -343,11 +340,11 @@ header p {
 .order-summary {
     max-width: 700px;
     margin: 20px auto;
-    background: var(--white);
+    background: var(--cream);
     padding: 20px;
     border-radius: 10px;
     box-shadow: var(--shadow);
-    border-top: 4px solid var(--primary);
+    border-top: 4px solid var(--header-orange);
 }
 
 .order-summary p {
@@ -355,6 +352,7 @@ header p {
     justify-content: space-between;
     margin: 8px 0;
     font-size: 1.1rem;
+    color: #2c2c54;
 }
 
 .customer-details {
@@ -366,27 +364,29 @@ header p {
     width: 100%;
     padding: 12px;
     margin: 12px 0;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--header-orange);
     border-radius: 10px;
     font-size: 1.1rem;
-    background: var(--secondary);
+    background: var(--cream);
+    color: #2c2c54;
 }
 
 /* Confirmation Screen */
 .confirmation-card {
     max-width: 450px;
     margin: 20vh auto;
-    background: var(--white);
+    background: var(--cream);
     padding: 25px;
     text-align: center;
     border-radius: 20px;
     box-shadow: var(--shadow);
-    border: 3px solid var(--primary);
+    border: 3px solid var(--header-orange);
+    color: #2c2c54;
 }
 
 .checkmark {
     font-size: 3.5rem;
-    color: var(--primary);
+    color: var(--header-orange);
     margin-bottom: 15px;
 }
 
@@ -403,7 +403,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: var(--white);
+    background: var(--cream);
     border-radius: 10px;
     overflow: hidden;
 }
@@ -412,11 +412,12 @@ th, td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+    color: #2c2c54;
 }
 
 th {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--header-orange);
+    color: var(--cream);
 }
 
 .menu-form {
@@ -424,18 +425,20 @@ th {
     gap: 12px;
     max-width: 500px;
     margin: 20px 0;
-    background: var(--white);
+    background: var(--cream);
     padding: 20px;
     border-radius: 10px;
     box-shadow: var(--shadow);
+    color: #2c2c54;
 }
 
 .menu-form input, .menu-form select {
     padding: 12px;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--header-orange);
     border-radius: 10px;
     font-size: 1rem;
-    background: var(--secondary);
+    background: var(--cream);
+    color: #2c2c54;
 }
 
 /* Animations */

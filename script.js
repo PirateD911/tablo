@@ -10,7 +10,7 @@ const confirmationScreen = document.getElementById('confirmation-screen');
 const adminScreen = document.getElementById('admin-screen');
 const startOrderBtn = document.getElementById('start-order-btn');
 const welcomeTableNumberInput = document.getElementById('welcome-table-number');
-const currentTableDisplay = document.getElementById('current-table'); // Note: This was undefined in last code, fixed below
+const currentTableDisplay = document.getElementById('current-table');
 const cartBtn = document.getElementById('cart-btn');
 const closeBtn = document.getElementById('close-btn');
 const closeFooterBtn = document.getElementById('close-footer-btn');
@@ -93,12 +93,8 @@ async function fetchOrders() {
 async function init() {
     await fetchMenuItems();
     setupEventListeners();
-    // Ensure currentTableDisplay is handled (was undefined due to missing element)
     if (!currentTableDisplay) {
-        console.warn("currentTableDisplay not found in DOM, creating placeholder");
-        const tempDisplay = document.createElement('span');
-        tempDisplay.id = 'current-table';
-        document.querySelector('#menu-screen header')?.appendChild(tempDisplay);
+        console.warn("currentTableDisplay not found, ensure it's in index.html header");
     }
 }
 
@@ -377,7 +373,7 @@ function startOrder() {
     }
     currentTable = tableNumber;
     console.log("Setting currentTable to:", currentTable);
-    // Since currentTableDisplay is missing in index.html, we'll skip it for now or add it if needed
+    if (currentTableDisplay) currentTableDisplay.textContent = tableNumber; // Only set if exists
     tableNumberInput.value = tableNumber;
     console.log("Transitioning screens...");
     welcomeScreen.classList.add('hidden');

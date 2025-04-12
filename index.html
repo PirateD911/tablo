@@ -30,13 +30,14 @@
                 <button id="close-btn" class="btn close-btn"><i class="fas fa-times"></i></button>
             </div>
             <p>Our every flavor tells a story.</p>
+            <span id="current-table" style="color: #fff4e2; font-size: 1rem;"></span>
         </header>
         <nav class="category-tabs">
             <button class="tab-btn active" data-category="all">All</button>
             <button class="tab-btn" data-category="beverages">Beverage</button>
             <button class="tab-btn" data-category="main">Main course</button>
             <button class="tab-btn" data-category="appetizers">Appetizer</button>
-            <i class="fas fa-angle-right"></i>
+            <button class="tab-btn" data-category="desserts">Dessert</button>
         </nav>
         <main class="menu-container"></main>
         <footer class="menu-footer">
@@ -44,7 +45,7 @@
                 <span>Good food, Good mood</span>
                 <i class="fas fa-flower"></i>
                 <button id="cart-btn" class="btn cart-btn">
-                    My cart: <span id="cart-total">$0.00</span>, <span id="cart-count">0</span> item
+                    My cart: <span id="cart-total">₹0.00</span>, <span id="cart-count">0</span> item
                 </button>
                 <button id="close-footer-btn" class="btn close-btn"><i class="fas fa-times"></i></button>
             </div>
@@ -59,9 +60,9 @@
         </header>
         <div class="cart-items"></div>
         <div class="order-summary">
-            <p>Subtotal: <span id="subtotal">$0.00</span></p>
-            <p>Tax (5%): <span id="tax">$0.00</span></p>
-            <p>Total: <span id="total">$0.00</span></p>
+            <p>Subtotal: <span id="subtotal">₹0.00</span></p>
+            <p>Tax (5%): <span id="tax">₹0.00</span></p>
+            <p>Total: <span id="total">₹0.00</span></p>
         </div>
         <div class="customer-details">
             <input type="text" id="customer-name" placeholder="Your Name" required>
@@ -77,7 +78,7 @@
             <i class="fas fa-check-circle checkmark"></i>
             <h2>Order Confirmed!</h2>
             <p>Order Number: <span id="order-number"></span></p>
-            <p>Total: <span id="confirmation-total">$0.00</span></p>
+            <p>Total: <span id="confirmation-total">₹0.00</span></p>
             <button id="new-order-btn" class="btn"><i class="fas fa-redo"></i> New Order</button>
         </div>
     </div>
@@ -115,7 +116,7 @@
                 <input type="hidden" id="menu-id">
                 <input type="text" id="menu-name" placeholder="Item Name" required>
                 <input type="text" id="menu-description" placeholder="Description" required>
-                <input type="number" id="menu-price" placeholder="Price ($)" step="0.01" required>
+                <input type="number" id="menu-price" placeholder="Price (₹)" step="0.01" required>
                 <select id="menu-category" required>
                     <option value="">Select Category</option>
                     <option value="beverages">Beverage</option>
